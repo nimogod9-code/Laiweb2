@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Website</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0a1a;
+    --bg2: #150e2a;
+    --bg3: #1c1235;
+    --card: #1e1535;
+    --purple: #9b59f5;
+    --purple2: #7c3aed;
+    --red: #e84040;
+    --red2: #c0392b;
+    --text: #f0eaff;
+    --text2: #b8a8d8;
+    --border: rgba(155,89,245,0.2);
+    --glow: 0 0 30px rgba(155,89,245,0.3);
+    --mode: dark;
+  }
+  [data-theme="light"] {
+    --bg: #f5f0ff;
+    --bg2: #ede5ff;
+    --bg3: #e2d6ff;
+    --card: #fff;
+    --purple: #7c3aed;
+    --purple2: #5b21b6;
+    --red: #dc2626;
+    --red2: #b91c1c;
+    --text: #1a0a3d;
+    --text2: #5b3fa0;
+    --border: rgba(124,58,237,0.2);
+    --glow: 0 0 30px rgba(124,58,237,0.15);
+    --mode: light;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.4s, color 0.4s;
+  }
+  /* NAV */
+  nav {
+    position: fixed; top:0; left:0; right:0; z-index:100;
+    background: rgba(13,10,26,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 16px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.4s;
+  }
+  [data-theme="light"] nav { background: rgba(245,240,255,0.85); }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 20px;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: shimmer 3s infinite;
+  }
+  @keyframes shimmer {
+    0%,100%{filter:brightness(1)} 50%{filter:brightness(1.3)}
+  }
+  .nav-tabs {
+    display: flex; gap: 4px;
+  }
+  .tab-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text2); font-family: 'DM Sans', sans-serif;
+    font-size: 12px; padding: 6px 10px; border-radius: 20px;
+    transition: all 0.3s;
+  }
+  .tab-btn.active {
+    background: var(--purple); color: #fff;
+    box-shadow: var(--glow);
+  }
+  .tab-btn:hover:not(.active) { color: var(--purple); }
+
+  /* PAGES */
+  .page {
+    display: none; padding: 72px 16px 32px;
+    animation: fadeSlide 0.5s ease;
+    min-height: 100vh;
+  }
+  .page.active { display: block; }
+  @keyframes fadeSlide {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  /* HERO / HOME */
+  .hero-orb {
+    width: 180px; height: 180px; border-radius: 50%;
+    background: radial-gradient(circle, var(--purple) 0%, var(--red) 60%, transparent 100%);
+    margin: 20px auto;
+    animation: pulse 3s ease-in-out infinite;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @keyframes pulse {
+    0%,100%{transform:scale(1); box-shadow:0 0 40px var(--purple);}
+    50%{transform:scale(1.08); box-shadow:0 0 80px var(--red);}
+  }
+  .hero-orb::after {
+    content:''; position:absolute;
+    width:200px; height:200px; border-radius:50%;
+    border: 1px solid var(--purple);
+    animation: ringPulse 3s ease-in-out infinite;
+  }
+  @keyframes ringPulse {
+    0%,100%{transform:scale(1);opacity:0.6}
+    50%{transform:scale(1.2);opacity:0}
+  }
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px; font-weight: 800;
+    text-align: center; line-height: 1.2;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+    animation: textPop 0.8s ease;
+  }
+  @keyframes textPop {
+    from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)}
+  }
+  .hero-sub {
+    text-align: center; color: var(--text2); font-size: 14px;
+    line-height: 1.7; margin-bottom: 28px;
+  }
+  .stats-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 8px; text-align: center;
+    animation: floatUp 0.6s ease both;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .stat-card:hover { transform: translateY(-4px); box-shadow: var(--glow); }
+  .stat-card:nth-child(1){animation-delay:0.1s}
+  .stat-card:nth-child(2){animation-delay:0.2s}
+  .stat-card:nth-child(3){animation-delay:0.3s}
+  @keyframes floatUp {
+    from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)}
+  }
+  .stat-num {
+    font-family:'Syne',sans-serif; font-size:24px; font-weight:800;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .stat-label { font-size:11px; color:var(--text2); margin-top:2px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family:'Syne',sans-serif; font-size:22px; font-weight:800;
+    margin-bottom: 16px; position: relative; display: inline-block;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  .section-title::after {
+    content:''; position:absolute; bottom:-4px; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, var(--purple), var(--red));
+    border-radius:2px; animation: growLine 0.6s ease;
+  }
+  @keyframes growLine {
+    from{transform:scaleX(0)} to{transform:scaleX(1)}
+  }
+
+  /* SCHEDULE PAGE */
+  .schedule-grid { display: flex; flex-direction: column; gap: 10px; }
+  .schedule-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 14px 16px;
+    display: flex; align-items: center; gap: 14px;
+    animation: slideIn 0.4s ease both;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .schedule-item:hover { transform: translateX(6px); box-shadow: var(--glow); }
+  .schedule-item::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+    background: linear-gradient(180deg, var(--purple), var(--red));
+  }
+  .schedule-time {
+    font-family:'Syne',sans-serif; font-weight:700; font-size:13px;
+    color: var(--purple); min-width: 54px;
+  }
+  .schedule-text { font-size: 14px; color: var(--text); }
+  .schedule-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    flex-shrink: 0; animation: dotPulse 2s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%,100%{transform:scale(1)} 50%{transform:scale(1.4)}
+  }
+  /* EDITABLE hint */
+  .edit-hint {
+    font-size:11px; color:var(--red); margin-top:4px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .editable-block {
+    background: var(--card); border: 1px dashed var(--purple);
+    border-radius: 14px; padding: 16px;
+    margin-top: 16px;
+  }
+  .editable-block textarea {
+    width: 100%; background: none; border: none; outline: none;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; resize: none; line-height: 1.7;
+    min-height: 80px;
+  }
+
+  /* GRAPH PAGE */
+  .graph-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; padding: 20px 16px; margin-bottom: 16px;
+    animation: fadeSlide 0.5s ease;
+  }
+  .graph-title { font-family:'Syne',sans-serif; font-size:15px; font-weight:700; margin-bottom:16px; color:var(--text); }
+  .bar-chart { display: flex; align-items: flex-end; gap: 8px; height: 140px; }
+  .bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:6px; height:100%; justify-content:flex-end; }
+  .bar {
+    width:100%; border-radius:6px 6px 0 0;
+    background: linear-gradient(180deg, var(--purple), var(--red));
+    transition: height 1s cubic-bezier(.34,1.56,.64,1);
+    animation: barGrow 1s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes barGrow {
+    from{height:0!important} to{}
+  }
+  .bar-label { font-size:10px; color:var(--text2); }
+  .bar-val { font-size:11px; font-weight:700; color:var(--purple); }
+  .donut-wrap {
+    display: flex; align-items: center; gap: 16px; margin-top: 8px;
+  }
+  svg.donut { flex-shrink:0; }
+  .donut-legend { display:flex; flex-direction:column; gap:8px; }
+  .legend-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--text2); }
+  .legend-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+  /* NEWS PAGE */
+  .news-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px; margin-bottom: 12px;
+    animation: floatUp 0.5s ease both;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .news-item:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+  .news-date { font-size:11px; color:var(--red); font-weight:500; margin-bottom:4px; }
+  .news-headline {
+    font-family:'Syne',sans-serif; font-size:16px; font-weight:700;
+    color:var(--text); margin-bottom:6px;
+    border: none; background: none; outline: none;
+    width: 100%; font-size: 16px; cursor: text;
+  }
+  .news-body {
+    font-size:13px; color:var(--text2); line-height:1.7;
+    border: none; background: none; outline: none;
+    width: 100%; resize: none; min-height: 60px;
+    font-family: 'DM Sans', sans-serif; cursor: text;
+  }
+  .news-tag {
+    display: inline-block; padding: 3px 10px; border-radius:20px;
+    background: rgba(155,89,245,0.15); color:var(--purple);
+    font-size:11px; font-weight:500; margin-top:8px; border: 1px solid var(--border);
+  }
+  .add-news-btn {
+    width: 100%; padding: 14px; border-radius: 14px;
+    border: 1px dashed var(--purple); background: none;
+    color: var(--purple); font-family:'Syne',sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    transition: all 0.3s;
+  }
+  .add-news-btn:hover { background: rgba(155,89,245,0.1); transform:scale(1.02); }
+
+  /* SETTINGS PAGE */
+  .settings-section {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 18px; padding: 20px 16px; margin-bottom: 16px;
+    animation: fadeSlide 0.5s ease;
+  }
+  .settings-label {
+    font-family:'Syne',sans-serif; font-size:15px; font-weight:700;
+    margin-bottom: 16px; color: var(--text);
+  }
+  .theme-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .theme-btn {
+    padding: 14px 10px; border-radius: 14px; border: 2px solid var(--border);
+    cursor: pointer; font-family:'Syne',sans-serif; font-size:13px;
+    font-weight:700; transition: all 0.3s; text-align:center;
+  }
+  .theme-btn.dark-btn {
+    background: #0d0a1a; color: #f0eaff;
+  }
+  .theme-btn.light-btn {
+    background: #f5f0ff; color: #1a0a3d;
+  }
+  .theme-btn.selected {
+    border-color: var(--purple);
+    box-shadow: 0 0 20px rgba(155,89,245,0.4);
+    transform: scale(1.03);
+  }
+  .anim-toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid var(--border);
+  }
+  .anim-toggle-row:last-child { border-bottom: none; }
+  .toggle-label { font-size: 14px; color: var(--text); }
+  .toggle-sub { font-size:11px; color:var(--text2); margin-top:2px; }
+  .toggle {
+    width:48px; height:26px; border-radius:13px;
+    border: none; cursor: pointer; position:relative;
+    transition: background 0.3s;
+    flex-shrink:0;
+  }
+  .toggle.on { background: linear-gradient(90deg, var(--purple), var(--red)); }
+  .toggle.off { background: var(--border); }
+  .toggle-knob {
+    position:absolute; top:3px; width:20px; height:20px;
+    border-radius:50%; background:#fff;
+    transition: left 0.3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toggle.on .toggle-knob { left: 25px; }
+  .toggle.off .toggle-knob { left: 3px; }
+
+  /* FLOATING PARTICLES */
+  .particles { position:fixed; top:0;left:0;right:0;bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+  .particle {
+    position:absolute; border-radius:50%;
+    background: var(--purple); opacity:0.08;
+    animation: float linear infinite;
+  }
+  @keyframes float {
+    0%{transform:translateY(100vh) scale(0)} 100%{transform:translateY(-20vh) scale(1)}
+  }
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">✦ MySpace</div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('home',this)">Home</button>
+    <button class="tab-btn" onclick="showPage('schedule',this)">Schedule</button>
+    <button class="tab-btn" onclick="showPage('graph',this)">Graph</button>
+    <button class="tab-btn" onclick="showPage('news',this)">News</button>
+    <button class="tab-btn" onclick="showPage('settings',this)">⚙</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero-orb">
+    <span style="font-size:40px; z-index:1;">✦</span>
+  </div>
+  <h1 class="hero-title">Welcome to<br>My Website</h1>
+  <p class="hero-sub">A modern, animated personal space<br>crafted with purple & red energy.</p>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="cnt1">0</div>
+      <div class="stat-label">Days Active</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="cnt2">0</div>
+      <div class="stat-label">News Posts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="cnt3">0</div>
+      <div class="stat-label">Screen hrs</div>
+    </div>
+  </div>
+  <div class="section-title">About Me</div>
+  <div class="editable-block">
+    <div class="edit-hint">✏ Click to edit this section</div>
+    <textarea placeholder="Write something about yourself here... (click to edit)">Hi! I'm building this website to track my daily life. Feel free to explore the Schedule, Graph, and News pages!</textarea>
+  </div>
+</div>
+
+<!-- SCHEDULE PAGE -->
+<div class="page" id="page-schedule">
+  <div class="section-title">Daily Schedule</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">✏ Click any text below to edit your schedule</p>
+  <div class="schedule-grid" id="schedule-list">
+    <div class="schedule-item" style="animation-delay:0.0s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">06:00</div>
+      <div class="schedule-text" contenteditable="true">Wake up & morning routine</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.1s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">07:00</div>
+      <div class="schedule-text" contenteditable="true">Breakfast & check messages</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.2s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">09:00</div>
+      <div class="schedule-text" contenteditable="true">Work / Study time</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.3s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">12:00</div>
+      <div class="schedule-text" contenteditable="true">Lunch break</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.4s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">14:00</div>
+      <div class="schedule-text" contenteditable="true">Afternoon session</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.5s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">18:00</div>
+      <div class="schedule-text" contenteditable="true">Exercise / Hobby time</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.6s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">21:00</div>
+      <div class="schedule-text" contenteditable="true">Relax & wind down</div>
+    </div>
+    <div class="schedule-item" style="animation-delay:0.7s">
+      <div class="schedule-dot"></div>
+      <div class="schedule-time" contenteditable="true">23:00</div>
+      <div class="schedule-text" contenteditable="true">Sleep</div>
+    </div>
+  </div>
+  <button class="add-news-btn" style="margin-top:14px" onclick="addScheduleItem()">+ Add Time Slot</button>
+</div>
+
+<!-- GRAPH PAGE -->
+<div class="page" id="page-graph">
+  <div class="section-title">Mobile Usage</div>
+  <div class="graph-card">
+    <div class="graph-title">📱 Daily Screen Time (hrs) — This Week</div>
+    <div class="bar-chart" id="bar-chart"></div>
+    <div style="display:flex;justify-content:space-between;margin-top:6px;">
+    </div>
+  </div>
+  <div class="graph-card">
+    <div class="graph-title">📊 App Usage Breakdown</div>
+    <div class="donut-wrap">
+      <svg class="donut" width="100" height="100" viewBox="0 0 36 36">
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#1e1535" stroke-width="6"/>
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#9b59f5" stroke-width="6"
+          stroke-dasharray="38 88" stroke-dashoffset="88" stroke-linecap="round">
+          <animate attributeName="stroke-dashoffset" from="88" to="0" dur="1.2s" fill="freeze"/>
+        </circle>
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#e84040" stroke-width="6"
+          stroke-dasharray="22 88" stroke-dashoffset="50">
+          <animate attributeName="stroke-dashoffset" from="88" to="50" dur="1.2s" fill="freeze"/>
+        </circle>
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#c084fc" stroke-width="6"
+          stroke-dasharray="18 88" stroke-dashoffset="28">
+          <animate attributeName="stroke-dashoffset" from="88" to="28" dur="1.4s" fill="freeze"/>
+        </circle>
+        <circle cx="18" cy="18" r="14" fill="none" stroke="#7c3aed" stroke-width="6"
+          stroke-dasharray="10 88" stroke-dashoffset="10">
+          <animate attributeName="stroke-dashoffset" from="88" to="10" dur="1.6s" fill="freeze"/>
+        </circle>
+      </svg>
+      <div class="donut-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#9b59f5"></div>Social (43%)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#e84040"></div>Games (25%)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#c084fc"></div>Video (20%)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Other (12%)</div>
+      </div>
+    </div>
+  </div>
+  <div class="graph-card">
+    <div class="graph-title">🕐 Update Your Usage Data</div>
+    <div class="edit-hint" style="margin-bottom:12px">✏ Enter today's screen time (hours)</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <input id="usage-input" type="number" min="0" max="24" step="0.5" value="5"
+        style="flex:1;padding:10px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:16px;font-family:'DM Sans',sans-serif;">
+      <button onclick="updateTodayBar()" style="padding:10px 16px;border-radius:10px;border:none;background:linear-gradient(135deg,var(--purple),var(--red));color:#fff;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;font-size:14px;">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- NEWS PAGE -->
+<div class="page" id="page-news">
+  <div class="section-title">My News</div>
+  <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">✏ Click on any title or text to edit</p>
+  <div id="news-list">
+    <div class="news-item">
+      <div class="news-date" contenteditable="true">May 3, 2026</div>
+      <div class="news-headline" contenteditable="true">Welcome to My News Page!</div>
+      <div class="news-body" contenteditable="true">This is my first news post. Click on this text to edit it and write your own news here. You can change the date, title, and body!</div>
+      <span class="news-tag" contenteditable="true">General</span>
+    </div>
+    <div class="news-item" style="animation-delay:0.1s">
+      <div class="news-date" contenteditable="true">May 2, 2026</div>
+      <div class="news-headline" contenteditable="true">Write Your Second Story Here</div>
+      <div class="news-body" contenteditable="true">Click to edit this post. Share anything you want — thoughts, updates, or daily happenings!</div>
+      <span class="news-tag" contenteditable="true">Personal</span>
+    </div>
+  </div>
+  <button class="add-news-btn" onclick="addNewsItem()">+ Add New Post</button>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div class="page" id="page-settings">
+  <div class="section-title">Settings</div>
+
+  <div class="settings-section">
+    <div class="settings-label">🎨 Theme</div>
+    <div class="theme-row">
+      <button class="theme-btn dark-btn selected" id="btn-dark" onclick="setTheme('dark')">
+        🌙 Dark<br><span style="font-size:10px;font-weight:400;opacity:0.7">Purple night</span>
+      </button>
+      <button class="theme-btn light-btn" id="btn-light" onclick="setTheme('light')">
+        ☀️ Light<br><span style="font-size:10px;font-weight:400;opacity:0.7">Soft lavender</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-label">✨ Animation Settings</div>
+    <div class="anim-toggle-row">
+      <div>
+        <div class="toggle-label">Page Transitions</div>
+        <div class="toggle-sub">Fade & slide between pages</div>
+      </div>
+      <button class="toggle on" onclick="toggleAnim(this,'transition')">
+        <div class="toggle-knob"></div>
+      </button>
+    </div>
+    <div class="anim-toggle-row">
+      <div>
+        <div class="toggle-label">Floating Particles</div>
+        <div class="toggle-sub">Background bubble effect</div>
+      </div>
+      <button class="toggle on" onclick="toggleAnim(this,'particles')">
+        <div class="toggle-knob"></div>
+      </button>
+    </div>
+    <div class="anim-toggle-row">
+      <div>
+        <div class="toggle-label">Hover Animations</div>
+        <div class="toggle-sub">Cards lift on hover</div>
+      </div>
+      <button class="toggle on" onclick="toggleAnim(this,'hover')">
+        <div class="toggle-knob"></div>
+      </button>
+    </div>
+    <div class="anim-toggle-row">
+      <div>
+        <div class="toggle-label">Glow Effects</div>
+        <div class="toggle-sub">Purple glow on elements</div>
+      </div>
+      <button class="toggle on" onclick="toggleAnim(this,'glow')">
+        <div class="toggle-knob"></div>
+      </button>
+    </div>
+    <div class="anim-toggle-row">
+      <div>
+        <div class="toggle-label">Pulsing Orb (Home)</div>
+        <div class="toggle-sub">Hero animation pulse</div>
+      </div>
+      <button class="toggle on" onclick="toggleAnim(this,'orb')">
+        <div class="toggle-knob"></div>
+      </button>
+    </div>
+  </div>
+
+  <div class="settings-section">
+    <div class="settings-label">📝 Site Name</div>
+    <input id="site-name-input" type="text" value="MySpace"
+      style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:'Syne',sans-serif;font-size:16px;font-weight:700;outline:none;">
+    <button onclick="updateSiteName()" style="margin-top:10px;width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--purple),var(--red));color:#fff;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;font-size:14px;">Save Name</button>
+  </div>
+</div>
+
+<script>
+// PARTICLES
+const pc = document.getElementById('particles');
+for(let i=0;i<12;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  const size=Math.random()*30+10;
+  p.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;animation-duration:${Math.random()*12+8}s;animation-delay:${Math.random()*8}s;`;
+  if(i%3===1) p.style.background='var(--red)';
+  if(i%3===2) p.style.background='var(--purple2)';
+  pc.appendChild(p);
+}
+
+// PAGES
+function showPage(id, btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='graph') buildBars();
+}
+
+// COUNTERS HOME
+function animCount(el,target){
+  let v=0; const step=Math.ceil(target/30);
+  const t=setInterval(()=>{v=Math.min(v+step,target);el.textContent=v;if(v>=target)clearInterval(t);},40);
+}
+setTimeout(()=>{
+  animCount(document.getElementById('cnt1'),42);
+  animCount(document.getElementById('cnt2'),newsCount());
+  animCount(document.getElementById('cnt3'),38);
+},400);
+function newsCount(){return document.querySelectorAll('.news-item').length;}
+
+// BAR CHART
+const usageData=[4.5,6,5.5,7,8,5,4];
+const dayLabels=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+function buildBars(){
+  const max=Math.max(...usageData);
+  const bc=document.getElementById('bar-chart');
+  bc.innerHTML='';
+  usageData.forEach((v,i)=>{
+    const h=Math.round((v/max)*120);
+    const w=document.createElement('div');
+    w.className='bar-wrap';
+    w.innerHTML=`<div class="bar-val">${v}h</div><div class="bar" style="height:${h}px"></div><div class="bar-label">${dayLabels[i]}</div>`;
+    bc.appendChild(w);
+  });
+}
+buildBars();
+
+function updateTodayBar(){
+  const v=parseFloat(document.getElementById('usage-input').value)||0;
+  usageData[6]=Math.min(v,24);
+  buildBars();
+}
+
+// SCHEDULE ADD
+function addScheduleItem(){
+  const sl=document.getElementById('schedule-list');
+  const item=document.createElement('div');
+  item.className='schedule-item';
+  item.style.animationDelay='0s';
+  item.innerHTML=`<div class="schedule-dot"></div><div class="schedule-time" contenteditable="true">00:00</div><div class="schedule-text" contenteditable="true">New activity — click to edit</div>`;
+  sl.appendChild(item);
+}
+
+// NEWS ADD
+let newsId=3;
+function addNewsItem(){
+  const nl=document.getElementById('news-list');
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const item=document.createElement('div');
+  item.className='news-item';
+  item.innerHTML=`<div class="news-date" contenteditable="true">${dateStr}</div><div class="news-headline" contenteditable="true">New Post Title — Click to Edit</div><div class="news-body" contenteditable="true">Write your news content here. Click to start typing!</div><span class="news-tag" contenteditable="true">Tag</span>`;
+  nl.prepend(item);
+  newsId++;
+}
+
+// THEME
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  document.getElementById('btn-dark').classList.toggle('selected',t==='dark');
+  document.getElementById('btn-light').classList.toggle('selected',t==='light');
+}
+
+// ANIMATION TOGGLES
+const animStates={transition:true,particles:true,hover:true,glow:true,orb:true};
+function toggleAnim(btn,type){
+  animStates[type]=!animStates[type];
+  btn.classList.toggle('on',animStates[type]);
+  btn.classList.toggle('off',!animStates[type]);
+  if(type==='particles') pc.style.display=animStates[type]?'block':'none';
+  if(type==='transition'){
+    document.querySelectorAll('.page').forEach(p=>{
+      p.style.animation=animStates[type]?'':'none';
+    });
+  }
+  if(type==='glow'){
+    document.documentElement.style.setProperty('--glow',animStates[type]?'0 0 30px rgba(155,89,245,0.3)':'none');
+  }
+  if(type==='orb'){
+    const orb=document.querySelector('.hero-orb');
+    if(orb) orb.style.animation=animStates[type]?'pulse 3s ease-in-out infinite':'none';
+  }
+}
+
+// SITE NAME
+function updateSiteName(){
+  const v=document.getElementById('site-name-input').value||'MySpace';
+  document.querySelector('.nav-logo').textContent='✦ '+v;
+}
+</script>
+</body>
+</html>
