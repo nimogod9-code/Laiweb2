@@ -671,9 +671,7 @@ let isAdmin = false;
 
 // AUTH STATE
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    alert("UID ของคุณ: " + user.uid + "\nADMIN_UID: " + ADMIN_UID);
-  }
+  
   if (user && user.uid === ADMIN_UID) {
     isAdmin = true;
     document.body.classList.add('is-admin');
