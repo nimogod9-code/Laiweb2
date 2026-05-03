@@ -68,7 +68,7 @@
     0%,100%{filter:brightness(1)} 50%{filter:brightness(1.3)}
   }
   .nav-tabs {
-    display: flex; gap: 4px;
+    display: flex; gap: 4px; align-items: center;
   }
   .tab-btn {
     background: none; border: none; cursor: pointer;
@@ -81,6 +81,32 @@
     box-shadow: var(--glow);
   }
   .tab-btn:hover:not(.active) { color: var(--purple); }
+
+  /* LOGIN BUTTON */
+  #login-btn {
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    border: none; cursor: pointer;
+    color: #fff; font-family: 'DM Sans', sans-serif;
+    font-size: 11px; font-weight: 700;
+    padding: 6px 12px; border-radius: 20px;
+    transition: all 0.3s; white-space: nowrap;
+  }
+  #login-btn:hover { opacity: 0.85; transform: scale(1.05); }
+  #logout-btn {
+    background: none; border: 1px solid var(--border); cursor: pointer;
+    color: var(--text2); font-family: 'DM Sans', sans-serif;
+    font-size: 11px; padding: 5px 10px; border-radius: 20px;
+    transition: all 0.3s;
+  }
+  #logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+  /* ADMIN BADGE */
+  .admin-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(155,89,245,0.15); border: 1px solid var(--purple);
+    color: var(--purple); font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 20px; margin-left: 6px;
+  }
 
   /* PAGES */
   .page {
@@ -200,7 +226,6 @@
   @keyframes dotPulse {
     0%,100%{transform:scale(1)} 50%{transform:scale(1.4)}
   }
-  /* EDITABLE hint */
   .edit-hint {
     font-size:11px; color:var(--red); margin-top:4px;
     display: flex; align-items: center; gap: 4px;
@@ -258,14 +283,11 @@
   .news-headline {
     font-family:'Syne',sans-serif; font-size:16px; font-weight:700;
     color:var(--text); margin-bottom:6px;
-    border: none; background: none; outline: none;
-    width: 100%; font-size: 16px; cursor: text;
+    width: 100%; font-size: 16px;
   }
   .news-body {
     font-size:13px; color:var(--text2); line-height:1.7;
-    border: none; background: none; outline: none;
-    width: 100%; resize: none; min-height: 60px;
-    font-family: 'DM Sans', sans-serif; cursor: text;
+    width: 100%;
   }
   .news-tag {
     display: inline-block; padding: 3px 10px; border-radius:20px;
@@ -280,6 +302,29 @@
     transition: all 0.3s;
   }
   .add-news-btn:hover { background: rgba(155,89,245,0.1); transform:scale(1.02); }
+
+  /* DELETE BUTTON */
+  .delete-news-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(232,64,64,0.15); border: 1px solid var(--red);
+    color: var(--red); border-radius: 8px; padding: 3px 8px;
+    font-size: 11px; cursor: pointer; transition: all 0.3s;
+    display: none;
+  }
+  .delete-news-btn:hover { background: var(--red); color: #fff; }
+  body.is-admin .delete-news-btn { display: block; }
+
+  /* SAVE STATUS */
+  .save-status {
+    font-size: 11px; color: var(--purple);
+    text-align: center; margin-top: 8px;
+    min-height: 16px; transition: opacity 0.3s;
+  }
+
+  /* LOADING */
+  .loading-news {
+    text-align: center; padding: 40px; color: var(--text2); font-size: 14px;
+  }
 
   /* SETTINGS PAGE */
   .settings-section {
@@ -299,12 +344,8 @@
     cursor: pointer; font-family:'Syne',sans-serif; font-size:13px;
     font-weight:700; transition: all 0.3s; text-align:center;
   }
-  .theme-btn.dark-btn {
-    background: #0d0a1a; color: #f0eaff;
-  }
-  .theme-btn.light-btn {
-    background: #f5f0ff; color: #1a0a3d;
-  }
+  .theme-btn.dark-btn { background: #0d0a1a; color: #f0eaff; }
+  .theme-btn.light-btn { background: #f5f0ff; color: #1a0a3d; }
   .theme-btn.selected {
     border-color: var(--purple);
     box-shadow: 0 0 20px rgba(155,89,245,0.4);
@@ -320,8 +361,7 @@
   .toggle {
     width:48px; height:26px; border-radius:13px;
     border: none; cursor: pointer; position:relative;
-    transition: background 0.3s;
-    flex-shrink:0;
+    transition: background 0.3s; flex-shrink:0;
   }
   .toggle.on { background: linear-gradient(90deg, var(--purple), var(--red)); }
   .toggle.off { background: var(--border); }
@@ -343,12 +383,59 @@
   @keyframes float {
     0%{transform:translateY(100vh) scale(0)} 100%{transform:translateY(-20vh) scale(1)}
   }
+
+  /* MODAL LOGIN */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; z-index: 200;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 24px; padding: 32px 24px; width: 90%; max-width: 340px;
+    text-align: center; animation: textPop 0.3s ease;
+  }
+  .modal-title {
+    font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
+    background: linear-gradient(135deg, var(--purple), var(--red));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .modal-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; }
+  .google-btn {
+    width: 100%; padding: 14px; border-radius: 14px;
+    border: 1px solid var(--border); background: var(--card);
+    color: var(--text); font-family: 'Syne', sans-serif;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    transition: all 0.3s;
+  }
+  .google-btn:hover { border-color: var(--purple); box-shadow: var(--glow); transform: translateY(-2px); }
+  .modal-close {
+    margin-top: 16px; background: none; border: none;
+    color: var(--text2); font-size: 13px; cursor: pointer;
+  }
+  .modal-close:hover { color: var(--text); }
 </style>
 </head>
 <body>
 
 <!-- Particles -->
 <div class="particles" id="particles"></div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal-box">
+    <div class="modal-title">Admin Login</div>
+    <div class="modal-sub">Sign in to manage your website content</div>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.983 5.482 18 9 18z"/><path fill="#FBBC05" d="M3.964 10.71c-.18-.54-.282-1.117-.282-1.71s.102-1.17.282-1.71V4.958H.957C.347 6.173 0 7.548 0 9s.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0 5.482 0 2.438 2.017.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z"/></svg>
+      Sign in with Google
+    </button>
+    <button class="modal-close" onclick="closeLoginModal()">Cancel</button>
+  </div>
+</div>
 
 <!-- NAV -->
 <nav>
@@ -359,6 +446,11 @@
     <button class="tab-btn" onclick="showPage('graph',this)">Graph</button>
     <button class="tab-btn" onclick="showPage('news',this)">News</button>
     <button class="tab-btn" onclick="showPage('settings',this)">⚙</button>
+    <button id="login-btn" onclick="openLoginModal()" style="display:none">🔑 Login</button>
+    <span id="admin-info" style="display:none">
+      <span class="admin-badge">👑 Admin</span>
+      <button id="logout-btn" onclick="signOut()" style="margin-left:4px">Logout</button>
+    </span>
   </div>
 </nav>
 
@@ -385,58 +477,59 @@
   </div>
   <div class="section-title">About Me</div>
   <div class="editable-block">
-    <div class="edit-hint">✏ Click to edit this section</div>
-    <textarea placeholder="Write something about yourself here... (click to edit)">Hi! I'm building this website to track my daily life. Feel free to explore the Schedule, Graph, and News pages!</textarea>
+    <div class="edit-hint admin-only" style="display:none">✏ Click to edit this section</div>
+    <textarea id="about-text" placeholder="Write something about yourself here..." readonly>Hi! I'm building this website to track my daily life. Feel free to explore the Schedule, Graph, and News pages!</textarea>
   </div>
+  <div class="save-status" id="about-save-status"></div>
 </div>
 
 <!-- SCHEDULE PAGE -->
 <div class="page" id="page-schedule">
   <div class="section-title">Daily Schedule</div>
-  <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">✏ Click any text below to edit your schedule</p>
+  <p class="admin-only" style="font-size:13px;color:var(--text2);margin-bottom:16px;display:none">✏ Click any text below to edit your schedule</p>
   <div class="schedule-grid" id="schedule-list">
     <div class="schedule-item" style="animation-delay:0.0s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">06:00</div>
-      <div class="schedule-text" contenteditable="true">Wake up & morning routine</div>
+      <div class="schedule-time">06:00</div>
+      <div class="schedule-text">Wake up & morning routine</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.1s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">07:00</div>
-      <div class="schedule-text" contenteditable="true">Breakfast & check messages</div>
+      <div class="schedule-time">07:00</div>
+      <div class="schedule-text">Breakfast & check messages</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.2s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">09:00</div>
-      <div class="schedule-text" contenteditable="true">Work / Study time</div>
+      <div class="schedule-time">09:00</div>
+      <div class="schedule-text">Work / Study time</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.3s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">12:00</div>
-      <div class="schedule-text" contenteditable="true">Lunch break</div>
+      <div class="schedule-time">12:00</div>
+      <div class="schedule-text">Lunch break</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.4s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">14:00</div>
-      <div class="schedule-text" contenteditable="true">Afternoon session</div>
+      <div class="schedule-time">14:00</div>
+      <div class="schedule-text">Afternoon session</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.5s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">18:00</div>
-      <div class="schedule-text" contenteditable="true">Exercise / Hobby time</div>
+      <div class="schedule-time">18:00</div>
+      <divclass="schedule-text">Exercise / Hobby time</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.6s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">21:00</div>
-      <div class="schedule-text" contenteditable="true">Relax & wind down</div>
+      <div class="schedule-time">21:00</div>
+      <div class="schedule-text">Relax & wind down</div>
     </div>
     <div class="schedule-item" style="animation-delay:0.7s">
       <div class="schedule-dot"></div>
-      <div class="schedule-time" contenteditable="true">23:00</div>
-      <div class="schedule-text" contenteditable="true">Sleep</div>
+      <div class="schedule-time">23:00</div>
+      <div class="schedule-text">Sleep</div>
     </div>
   </div>
-  <button class="add-news-btn" style="margin-top:14px" onclick="addScheduleItem()">+ Add Time Slot</button>
+  <button class="add-news-btn admin-only" style="margin-top:14px;display:none" onclick="addScheduleItem()">+ Add Time Slot</button>
 </div>
 
 <!-- GRAPH PAGE -->
@@ -445,8 +538,6 @@
   <div class="graph-card">
     <div class="graph-title">📱 Daily Screen Time (hrs) — This Week</div>
     <div class="bar-chart" id="bar-chart"></div>
-    <div style="display:flex;justify-content:space-between;margin-top:6px;">
-    </div>
   </div>
   <div class="graph-card">
     <div class="graph-title">📊 App Usage Breakdown</div>
@@ -478,7 +569,7 @@
       </div>
     </div>
   </div>
-  <div class="graph-card">
+  <div class="graph-card admin-only" style="display:none">
     <div class="graph-title">🕐 Update Your Usage Data</div>
     <div class="edit-hint" style="margin-bottom:12px">✏ Enter today's screen time (hours)</div>
     <div style="display:flex;gap:8px;align-items:center">
@@ -492,22 +583,11 @@
 <!-- NEWS PAGE -->
 <div class="page" id="page-news">
   <div class="section-title">My News</div>
-  <p style="font-size:13px;color:var(--text2);margin-bottom:16px;">✏ Click on any title or text to edit</p>
+  <p class="admin-only" style="font-size:13px;color:var(--text2);margin-bottom:16px;display:none">✏ Click on any title or text to edit</p>
   <div id="news-list">
-    <div class="news-item">
-      <div class="news-date" contenteditable="true">May 3, 2026</div>
-      <div class="news-headline" contenteditable="true">Welcome to My News Page!</div>
-      <div class="news-body" contenteditable="true">This is my first news post. Click on this text to edit it and write your own news here. You can change the date, title, and body!</div>
-      <span class="news-tag" contenteditable="true">General</span>
-    </div>
-    <div class="news-item" style="animation-delay:0.1s">
-      <div class="news-date" contenteditable="true">May 2, 2026</div>
-      <div class="news-headline" contenteditable="true">Write Your Second Story Here</div>
-      <div class="news-body" contenteditable="true">Click to edit this post. Share anything you want — thoughts, updates, or daily happenings!</div>
-      <span class="news-tag" contenteditable="true">Personal</span>
-    </div>
+    <div class="loading-news">Loading news...</div>
   </div>
-  <button class="add-news-btn" onclick="addNewsItem()">+ Add New Post</button>
+  <button class="add-news-btn admin-only" style="display:none" onclick="addNewsItem()">+ Add New Post</button>
 </div>
 
 <!-- SETTINGS PAGE -->
@@ -529,59 +609,201 @@
   <div class="settings-section">
     <div class="settings-label">✨ Animation Settings</div>
     <div class="anim-toggle-row">
-      <div>
-        <div class="toggle-label">Page Transitions</div>
-        <div class="toggle-sub">Fade & slide between pages</div>
-      </div>
-      <button class="toggle on" onclick="toggleAnim(this,'transition')">
-        <div class="toggle-knob"></div>
-      </button>
+      <div><div class="toggle-label">Page Transitions</div><div class="toggle-sub">Fade & slide between pages</div></div>
+      <button class="toggle on" onclick="toggleAnim(this,'transition')"><div class="toggle-knob"></div></button>
     </div>
     <div class="anim-toggle-row">
-      <div>
-        <div class="toggle-label">Floating Particles</div>
-        <div class="toggle-sub">Background bubble effect</div>
-      </div>
-      <button class="toggle on" onclick="toggleAnim(this,'particles')">
-        <div class="toggle-knob"></div>
-      </button>
+      <div><div class="toggle-label">Floating Particles</div><div class="toggle-sub">Background bubble effect</div></div>
+      <button class="toggle on" onclick="toggleAnim(this,'particles')"><div class="toggle-knob"></div></button>
     </div>
     <div class="anim-toggle-row">
-      <div>
-        <div class="toggle-label">Hover Animations</div>
-        <div class="toggle-sub">Cards lift on hover</div>
-      </div>
-      <button class="toggle on" onclick="toggleAnim(this,'hover')">
-        <div class="toggle-knob"></div>
-      </button>
+      <div><div class="toggle-label">Hover Animations</div><div class="toggle-sub">Cards lift on hover</div></div>
+      <button class="toggle on" onclick="toggleAnim(this,'hover')"><div class="toggle-knob"></div></button>
     </div>
     <div class="anim-toggle-row">
-      <div>
-        <div class="toggle-label">Glow Effects</div>
-        <div class="toggle-sub">Purple glow on elements</div>
-      </div>
-      <button class="toggle on" onclick="toggleAnim(this,'glow')">
-        <div class="toggle-knob"></div>
-      </button>
+      <div><div class="toggle-label">Glow Effects</div><div class="toggle-sub">Purple glow on elements</div></div>
+      <button class="toggle on" onclick="toggleAnim(this,'glow')"><div class="toggle-knob"></div></button>
     </div>
     <div class="anim-toggle-row">
-      <div>
-        <div class="toggle-label">Pulsing Orb (Home)</div>
-        <div class="toggle-sub">Hero animation pulse</div>
-      </div>
-      <button class="toggle on" onclick="toggleAnim(this,'orb')">
-        <div class="toggle-knob"></div>
-      </button>
+      <div><div class="toggle-label">Pulsing Orb (Home)</div><div class="toggle-sub">Hero animation pulse</div></div>
+      <button class="toggle on" onclick="toggleAnim(this,'orb')"><div class="toggle-knob"></div></button>
     </div>
   </div>
 
-  <div class="settings-section">
+  <div class="settings-section admin-only" style="display:none">
     <div class="settings-label">📝 Site Name</div>
     <input id="site-name-input" type="text" value="MySpace"
       style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-family:'Syne',sans-serif;font-size:16px;font-weight:700;outline:none;">
     <button onclick="updateSiteName()" style="margin-top:10px;width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--purple),var(--red));color:#fff;font-family:'Syne',sans-serif;font-weight:700;cursor:pointer;font-size:14px;">Save Name</button>
   </div>
 </div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ====== CONFIG ======
+const firebaseConfig = {
+  apiKey: "AIzaSyBgOqHl50ak3TApdnjyyx1wQ8dPfFZ7MS4",
+  authDomain: "loopp-d02b1.firebaseapp.com",
+  projectId: "loopp-d02b1",
+  storageBucket: "loopp-d02b1.firebasestorage.app",
+  messagingSenderId: "349705760950",
+  appId: "1:349705760950:web:d4dc134d4e9bc9f3eff617",
+  measurementId: "G-LGNXL1SWY5"
+};
+
+// ====== ใส่ UID ของคุณตรงนี้ ======
+const ADMIN_UID = "BFMSYB605dPkGzQKNjNiwlqVyGr1";
+// ===================================
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+let isAdmin = false;
+
+// AUTH STATE
+onAuthStateChanged(auth, (user) => {
+  if (user && user.uid === ADMIN_UID) {
+    isAdmin = true;
+    document.body.classList.add('is-admin');
+    document.getElementById('login-btn').style.display = 'none';
+    document.getElementById('admin-info').style.display = 'inline-flex';
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = '');
+    // Enable editing
+    document.getElementById('about-text').removeAttribute('readonly');
+    document.querySelectorAll('.schedule-time, .schedule-text').forEach(el => el.setAttribute('contenteditable','true'));
+  } else {
+    isAdmin = false;
+    document.body.classList.remove('is-admin');
+    document.getElementById('login-btn').style.display = 'block';
+    document.getElementById('admin-info').style.display = 'none';
+    document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'none');
+    // Disable editing
+    document.getElementById('about-text').setAttribute('readonly', true);
+    document.querySelectorAll('.schedule-time, .schedule-text').forEach(el => el.removeAttribute('contenteditable'));
+  }
+});
+
+// SIGN IN
+window.signInWithGoogle = async () => {
+  try {
+    await signInWithPopup(auth, provider);
+    closeLoginModal();
+  } catch(e) {
+    alert('Login failed: ' + e.message);
+  }
+};
+
+// SIGN OUT
+window.signOut = () => fbSignOut(auth);
+
+// LOAD NEWS
+async function loadNews() {
+  const nl = document.getElementById('news-list');
+  nl.innerHTML = '<div class="loading-news">Loading...</div>';
+  try {
+    const q = query(collection(db, 'news'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    nl.innerHTML = '';
+    if (snap.empty) {
+      nl.innerHTML = '<div class="loading-news" style="color:var(--text2)">No news yet.</div>';
+      return;
+    }
+    snap.forEach(docSnap => {
+      const d = docSnap.data();
+      nl.appendChild(createNewsElement(docSnap.id, d.date, d.headline, d.body, d.tag));
+    });
+  } catch(e) {
+    nl.innerHTML = '<div class="loading-news">Could not load news.</div>';
+  }
+}
+loadNews();
+
+// CREATE NEWS ELEMENT
+function createNewsElement(id, date, headline, body, tag) {
+  const item = document.createElement('div');
+  item.className = 'news-item';
+  item.dataset.id = id;
+  item.innerHTML = `
+    <button class="delete-news-btn" onclick="deleteNews('${id}')">✕ Delete</button>
+    <div class="news-date" ${isAdmin?'contenteditable="true"':''}>${date||''}</div>
+    <div class="news-headline" ${isAdmin?'contenteditable="true"':''}>${headline||''}</div>
+    <div class="news-body" ${isAdmin?'contenteditable="true"':''}>${body||''}</div>
+    <span class="news-tag" ${isAdmin?'contenteditable="true"':''}>${tag||'General'}</span>
+    <div class="save-status"></div>
+  `;
+  if (isAdmin) {
+    // Auto-save on blur
+    ['news-date','news-headline','news-body','news-tag'].forEach(cls => {
+      const el = item.querySelector('.'+cls);
+      if(el) el.addEventListener('blur', () => saveNews(item));
+    });
+  }
+  return item;
+}
+
+// SAVE NEWS
+window.saveNews = async (item) => {
+  if (!isAdmin) return;
+  const id = item.dataset.id;
+  const status = item.querySelector('.save-status');
+  status.textContent = 'Saving...';
+  try {
+    await updateDoc(doc(db, 'news', id), {
+      date: item.querySelector('.news-date').textContent,
+      headline: item.querySelector('.news-headline').textContent,
+      body: item.querySelector('.news-body').textContent,
+      tag: item.querySelector('.news-tag').textContent,
+    });
+    status.textContent = '✓ Saved';
+    setTimeout(() => status.textContent = '', 2000);
+  } catch(e) {
+    status.textContent = '✗ Save failed';
+  }
+};
+
+// ADD NEWS
+window.addNewsItem = async () => {
+  if (!isAdmin) return;
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  try {
+    const ref = await addDoc(collection(db, 'news'), {
+      date: dateStr,
+      headline: 'New Post Title — Click to Edit',
+      body: 'Write your news content here.',
+      tag: 'Tag',
+      createdAt: serverTimestamp()
+    });
+    const nl = document.getElementById('news-list');
+    const el = createNewsElement(ref.id, dateStr, 'New Post Title — Click to Edit', 'Write your news content here.', 'Tag');
+    nl.prepend(el);
+  } catch(e) {
+    alert('Could not add post: ' + e.message);
+  }
+};
+
+// DELETE NEWS
+window.deleteNews = async (id) => {
+  if (!isAdmin) return;
+  if (!confirm('Delete this post?')) return;
+  try {
+    await deleteDoc(doc(db, 'news', id));
+    const item = document.querySelector(`.news-item[data-id="${id}"]`);
+    if (item) item.remove();
+  } catch(e) {
+    alert('Could not delete: ' + e.message);
+  }
+};
+
+</script>
 
 <script>
 // PARTICLES
@@ -605,17 +827,16 @@ function showPage(id, btn){
   if(id==='graph') buildBars();
 }
 
-// COUNTERS HOME
+// COUNTERS
 function animCount(el,target){
   let v=0; const step=Math.ceil(target/30);
   const t=setInterval(()=>{v=Math.min(v+step,target);el.textContent=v;if(v>=target)clearInterval(t);},40);
 }
 setTimeout(()=>{
   animCount(document.getElementById('cnt1'),42);
-  animCount(document.getElementById('cnt2'),newsCount());
+  animCount(document.getElementById('cnt2'), document.querySelectorAll('.news-item').length || 2);
   animCount(document.getElementById('cnt3'),38);
 },400);
-function newsCount(){return document.querySelectorAll('.news-item').length;}
 
 // BAR CHART
 const usageData=[4.5,6,5.5,7,8,5,4];
@@ -645,22 +866,8 @@ function addScheduleItem(){
   const sl=document.getElementById('schedule-list');
   const item=document.createElement('div');
   item.className='schedule-item';
-  item.style.animationDelay='0s';
   item.innerHTML=`<div class="schedule-dot"></div><div class="schedule-time" contenteditable="true">00:00</div><div class="schedule-text" contenteditable="true">New activity — click to edit</div>`;
   sl.appendChild(item);
-}
-
-// NEWS ADD
-let newsId=3;
-function addNewsItem(){
-  const nl=document.getElementById('news-list');
-  const now=new Date();
-  const dateStr=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const item=document.createElement('div');
-  item.className='news-item';
-  item.innerHTML=`<div class="news-date" contenteditable="true">${dateStr}</div><div class="news-headline" contenteditable="true">New Post Title — Click to Edit</div><div class="news-body" contenteditable="true">Write your news content here. Click to start typing!</div><span class="news-tag" contenteditable="true">Tag</span>`;
-  nl.prepend(item);
-  newsId++;
 }
 
 // THEME
@@ -677,18 +884,8 @@ function toggleAnim(btn,type){
   btn.classList.toggle('on',animStates[type]);
   btn.classList.toggle('off',!animStates[type]);
   if(type==='particles') pc.style.display=animStates[type]?'block':'none';
-  if(type==='transition'){
-    document.querySelectorAll('.page').forEach(p=>{
-      p.style.animation=animStates[type]?'':'none';
-    });
-  }
-  if(type==='glow'){
-    document.documentElement.style.setProperty('--glow',animStates[type]?'0 0 30px rgba(155,89,245,0.3)':'none');
-  }
-  if(type==='orb'){
-    const orb=document.querySelector('.hero-orb');
-    if(orb) orb.style.animation=animStates[type]?'pulse 3s ease-in-out infinite':'none';
-  }
+  if(type==='glow') document.documentElement.style.setProperty('--glow',animStates[type]?'0 0 30px rgba(155,89,245,0.3)':'none');
+  if(type==='orb'){const orb=document.querySelector('.hero-orb');if(orb)orb.style.animation=animStates[type]?'pulse 3s ease-in-out infinite':'none';}
 }
 
 // SITE NAME
@@ -696,6 +893,12 @@ function updateSiteName(){
   const v=document.getElementById('site-name-input').value||'MySpace';
   document.querySelector('.nav-logo').textContent='✦ '+v;
 }
+
+// MODAL
+function openLoginModal(){ document.getElementById('login-modal').classList.add('show'); }
+function closeLoginModal(){ document.getElementById('login-modal').classList.remove('show'); }
+window.openLoginModal = openLoginModal;
+window.closeLoginModal = closeLoginModal;
 </script>
 </body>
 </html>
